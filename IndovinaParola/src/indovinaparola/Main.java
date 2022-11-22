@@ -1,5 +1,6 @@
 package indovinaparola;
 
+import GestioneParola.Parola;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -7,14 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-
+    //variabili per il gioco
+    static public Parola parola;
+    
+    
+    //variabili per la connessione
     static List<ClientHandler> clients;
     ServerSocket serverSocket;
     static int numOfUsers = 0;
     Socket socket;
 
     public Main() {
+        parola= new Parola();
         clients = new ArrayList<>();
+        
         try {
             serverSocket = new ServerSocket(Constants.PORT);
         } catch (IOException ex) {

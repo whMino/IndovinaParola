@@ -16,7 +16,9 @@ public class Parola {
     }
 
     
-    
+    public String getParola(){
+        return parola;
+    }
     
     
     

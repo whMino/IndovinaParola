@@ -61,9 +61,9 @@ public class ClientHandler implements Runnable {
 
         for (ClientHandler c : Main.getClients()) {
             if (c.isLosggedIn && c.name.equals(recipient)) {
-                message = "[" + new Date() + "]: " + message;
+                message = "(" + Main.parola.getParola() + ")" + message;
                 write(c.output, recipient + " : " + message);
-                log(name + " --> " + recipient + " : " + "[" + new Date() + "]: " + message);
+                log(name + " --> " + recipient + " : " + message);
                 break;
             }
         }
