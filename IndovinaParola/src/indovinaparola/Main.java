@@ -6,14 +6,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndovinaParola {
+public class Main {
 
     static List<ClientHandler> clients;
     ServerSocket serverSocket;
     static int numOfUsers = 0;
     Socket socket;
 
-    public IndovinaParola() {
+    public Main() {
         clients = new ArrayList<>();
         try {
             serverSocket = new ServerSocket(Constants.PORT);
@@ -23,7 +23,7 @@ public class IndovinaParola {
     }
 
     public static void main(String[] args) {
-        IndovinaParola indovinaparola = new IndovinaParola();
+        Main indovinaparola = new Main();
         indovinaparola.watiConnection();
     }
 

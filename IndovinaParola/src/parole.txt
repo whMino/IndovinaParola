@@ -1,0 +1,9 @@
+mucca
+gallina
+gallo
+toro
+vulcano
+paese
+scrivania
+penna
+matita

@@ -59,7 +59,7 @@ public class ClientHandler implements Runnable {
         String recipient = tokenizer.nextToken().trim();
         String message = tokenizer.nextToken().trim();
 
-        for (ClientHandler c : IndovinaParola.getClients()) {
+        for (ClientHandler c : Main.getClients()) {
             if (c.isLosggedIn && c.name.equals(recipient)) {
                 message = "[" + new Date() + "]: " + message;
                 write(c.output, recipient + " : " + message);
