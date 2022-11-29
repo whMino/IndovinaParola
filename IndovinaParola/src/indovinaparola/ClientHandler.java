@@ -55,18 +55,22 @@ public class ClientHandler implements Runnable {
 
     private void forwardToClient(String received) {
         // username # message
-        StringTokenizer tokenizer = new StringTokenizer(received, "#");
-        String recipient = tokenizer.nextToken().trim();
-        String message = tokenizer.nextToken().trim();
-
-        for (ClientHandler c : Main.getClients()) {
-            if (c.isLosggedIn && c.name.equals(recipient)) {
+        //StringTokenizer tokenizer = new StringTokenizer(received, "#");
+        //String recipient = tokenizer.nextToken().trim();
+        //String message = tokenizer.nextToken().trim();
+        String message=received;
+        //for (ClientHandler c : Main.getClients()) {
+            //if (c.isLosggedIn && c.name.equals(recipient)) {
                 message = "(" + Main.parola.getParola() + ")" + message;
-                write(c.output, recipient + " : " + message);
-                log(name + " --> " + recipient + " : " + message);
-                break;
-            }
-        }
+                //for (ClientHandler c : Main.getClients()) {
+                //metodo per controllare se il messaggio corrisponde
+                    write(this.output, name + " : " + message);
+                //}
+                
+                log(name + " : " + message);
+               // break;
+            //}
+        //}
 
     }
 
