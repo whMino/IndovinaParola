@@ -11,7 +11,7 @@ import java.util.List;
 public class Main {
     //variabili per il gioco
     static public Parola parola;
-    
+    static public Controllo controllo;
     
     //variabili per la connessione
     static List<ClientHandler> clients;
@@ -21,6 +21,7 @@ public class Main {
 
     public Main() {
         parola= new Parola();
+        controllo=new Controllo(parola);
         clients = new ArrayList<>();
         
         try {
@@ -54,6 +55,7 @@ public class Main {
             addClient(handler);
             thread.start();
         }
+        
     }
 
     public static List<ClientHandler> getClients() {

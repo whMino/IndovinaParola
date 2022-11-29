@@ -38,6 +38,7 @@ public class ClientHandler implements Runnable {
     public void run() {
         String received;
         write(output, "Your name : " + name);
+        write(output, "Word Length : " + Main.parola.getParola().length());
 
         while (true) {
             received = read();
@@ -61,10 +62,25 @@ public class ClientHandler implements Runnable {
         String message=received;
         //for (ClientHandler c : Main.getClients()) {
             //if (c.isLosggedIn && c.name.equals(recipient)) {
-                message = "(" + Main.parola.getParola() + ")" + message;
+                //message = "(" + Main.parola.getParola() + ")" + message;
                 //for (ClientHandler c : Main.getClients()) {
-                //metodo per controllare se il messaggio corrisponde
-                    write(this.output, name + " : " + message);
+                    String risultato=Main.controllo.cambia(message);
+                    if(risultato.equals(message)) {
+                        write(this.output,"Hai Vinto");
+                        for (ClientHandler c : Main.getClients()) {
+                            if(c!=this) {
+                                write(c.output,"Il giocatore: " + name + " ha vinto (" + Main.parola.getParola()+")");
+                                c.closeSocket();
+                                c.closeStreams();
+                            }
+                        }
+                        log(name + " :ha indovinato la parola " + Main.parola.getParola());
+                        this.closeSocket();
+                        this.closeStreams();
+                    }else {
+                        write(this.output, name + " : " + risultato);
+                    }
+                    
                 //}
                 
                 log(name + " : " + message);
