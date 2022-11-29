@@ -1,5 +1,6 @@
 package indovinaparola;
 
+import GestioneParola.Controllo;
 import GestioneParola.Parola;
 import java.io.IOException;
 import java.net.ServerSocket;
