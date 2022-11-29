@@ -74,7 +74,7 @@ public class ClientHandler implements Runnable {
                                 c.closeStreams();
                             }
                         }
-                        log(name + " :ha indovinato la parola " + Main.parola.getParola());
+                        log(name + " : ha indovinato la parola " + Main.parola.getParola());
                         this.closeSocket();
                         this.closeStreams();
                     }else {
@@ -82,8 +82,11 @@ public class ClientHandler implements Runnable {
                     }
                     
                 //}
-                
-                log(name + " : " + message);
+                if(message!="")
+                    log(name + " : " + message);
+                else{
+                    
+                }
                // break;
             //}
         //}
@@ -95,7 +98,7 @@ public class ClientHandler implements Runnable {
         try {
             line = input.readUTF();
         } catch (IOException ex) {
-            log("read : " + ex.getMessage());
+            //log("read : " + ex.getMessage());
         }
         return line;
     }
@@ -104,7 +107,7 @@ public class ClientHandler implements Runnable {
         try {
             output.writeUTF(message);
         } catch (IOException ex) {
-            log("write : " + ex.getMessage());
+            //log("write : " + ex.getMessage());
         }
     }
 
@@ -113,7 +116,7 @@ public class ClientHandler implements Runnable {
             this.input.close();
             this.output.close();
         } catch (IOException ex) {
-            log("closeStreams : " + ex.getMessage());
+            //log("closeStreams : " + ex.getMessage());
         }
     }
 
@@ -121,7 +124,7 @@ public class ClientHandler implements Runnable {
         try {
             socket.close();
         } catch (IOException ex) {
-            log("closeSocket : " + ex.getMessage());
+            //log("closeSocket : " + ex.getMessage());
         }
     }
 
