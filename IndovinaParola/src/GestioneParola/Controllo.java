@@ -12,6 +12,10 @@ public class Controllo {
     
     public String cambia(String tentativo) {
         String risultato="";
+        if(tentativo.equals("jolly")){
+            return "Jolly";
+        }
+        
         if(tentativo.equals(daIndovinare)) {
             return tentativo;
         }
@@ -20,6 +24,8 @@ public class Controllo {
         
         if(tentativo.length()>daIndovinare.length())
             return "Parola Troppo Lunga";
+        
+       
         
         for (int i = 0; i < daIndovinare.length(); i++) {
             if(daIndovinare.charAt(i)==tentativo.charAt(i)) {

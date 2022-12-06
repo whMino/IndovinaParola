@@ -13,13 +13,16 @@ public class ClientHandler implements Runnable {
 
     final Socket socket;
     final Scanner scan;
+    private Main main;
+    public int ntentaivi=0;
     String name;
     boolean isLosggedIn;
-
+    
     private DataInputStream input;
     private DataOutputStream output;
 
-    public ClientHandler(Socket socket, String name) {
+    public ClientHandler(Main main, Socket socket, String name) {
+        this.main=main;
         this.socket = socket;
         scan = new Scanner(System.in);
         this.name = name;
@@ -55,44 +58,50 @@ public class ClientHandler implements Runnable {
     }
 
     private void forwardToClient(String received) {
-        // username # message
-        //StringTokenizer tokenizer = new StringTokenizer(received, "#");
-        //String recipient = tokenizer.nextToken().trim();
-        //String message = tokenizer.nextToken().trim();
         String message = received;
-        //for (ClientHandler c : Main.getClients()) {
-        //if (c.isLosggedIn && c.name.equals(recipient)) {
-        //message = "(" + Main.parola.getParola() + ")" + message;
-        //for (ClientHandler c : Main.getClients()) {
+        if (message != "") 
+                ntentaivi++;
+            
         String risultato = Main.controllo.cambia(message);
         if (risultato.equals(message)) {
             write(this.output, "Hai Vinto");
+            setclassifica();
             for (ClientHandler c : Main.getClients()) {
                 if (c != this) {
                     write(c.output, "Il giocatore: " + name + " ha vinto (" + Main.parola.getParola() + ")");
+                    c.setclassifica();
                     c.closeSocket();
                     c.closeStreams();
                 }
             }
-            log(name + " : ha indovinato la parola " + Main.parola.getParola());
+            log(name + " : " + message);
+            log(name + " : HA VINTO indovinando la parola " + Main.parola.getParola());
+            makeclassifica();
             this.closeSocket();
             this.closeStreams();
-        } else {
-            write(this.output, name + " : " + risultato);
-        }
-
-        //}
-        if (message != "") {
+        } else if (risultato.equals("Jolly")) {
+            write(this.output, "Hai perso, la parola era: " + Main.parola.getParola());
+            closeSocket();
+            closeStreams();
+            
             log(name + " : " + message);
+            log(name + " : " + "ha utilizzato il jolly");
+            
         } else {
-
+            write(this.output, "gioco: "+risultato);
+            if (message != "") {
+                log(name + " : " + message);
+            }
         }
-        // break;
-        //}
-        //}
 
     }
-
+    
+    public void setclassifica(){
+        main.setClassifica(name, ntentaivi);
+    }
+    public void makeclassifica(){
+        main.makeClassifica();
+    }
     private String read() {
         String line = "";
         try {

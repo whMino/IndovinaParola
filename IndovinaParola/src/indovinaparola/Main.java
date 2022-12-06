@@ -12,7 +12,8 @@ public class Main {
     //variabili per il gioco
     static public Parola parola;
     static public Controllo controllo;
-    
+    static List<String> classifica;
+    static List<Integer> tentativi;
     //variabili per la connessione
     static List<ClientHandler> clients;
     ServerSocket serverSocket;
@@ -23,6 +24,8 @@ public class Main {
         parola= new Parola();
         controllo=new Controllo(parola);
         clients = new ArrayList<>();
+        classifica = new ArrayList<>();
+        tentativi = new ArrayList<>();
         
         try {
             serverSocket = new ServerSocket(Constants.PORT);
@@ -49,7 +52,7 @@ public class Main {
             log("Client accepted : " + socket.getInetAddress());
             numOfUsers++;
 
-            ClientHandler handler = new ClientHandler(socket, "user" + numOfUsers);
+            ClientHandler handler = new ClientHandler(this, socket, "user" + numOfUsers);
 
             Thread thread = new Thread(handler);
             addClient(handler);
@@ -66,8 +69,30 @@ public class Main {
         clients.add(client);
     }
 
-    private void log(String message) {
+  private void log(String message) {
         System.out.println(message);
     }
-
+    public void setClassifica(String name, int ntentativi){
+        classifica.add(name);
+        tentativi.add(ntentativi); 
+    }
+    public void makeClassifica(){
+        String tot="Claffica per tentativi:";
+        
+        for (int i = 0; i < classifica.size()-1 ; i++) {
+            if(tentativi.get(i)>tentativi.get(i+1)){
+                Integer temp = tentativi.get(i);
+                tentativi.set(i, tentativi.get(i+1));
+                tentativi.set(i+1, temp);
+                String temp2 = classifica.get(i);
+                classifica.set(i, classifica.get(i+1));
+                classifica.set(i+1, temp2);
+            }
+        }
+        for (int i = 0; i < classifica.size() ; i++) {
+            tot+= classifica.get(i) + "/ tentativi: " + tentativi.get(i) + "\n";
+        }
+        
+        log(tot);
+    }
 }
