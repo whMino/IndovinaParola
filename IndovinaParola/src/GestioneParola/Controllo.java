@@ -15,8 +15,11 @@ public class Controllo {
         if(tentativo.equals(daIndovinare)) {
             return tentativo;
         }
-        if(tentativo.length()!=daIndovinare.length())
-            return "Lunghezza Sbagliata";
+        if(tentativo.length()<daIndovinare.length())
+            return "Parola Troppo Corta";
+        
+        if(tentativo.length()>daIndovinare.length())
+            return "Parola Troppo Lunga";
         
         for (int i = 0; i < daIndovinare.length(); i++) {
             if(daIndovinare.charAt(i)==tentativo.charAt(i)) {
