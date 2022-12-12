@@ -52,7 +52,10 @@ public class Client {
                     try {
                         String msg = input.readUTF();
                         log(msg);
-                        interfaccia.writeError(msg);
+                        if(msg.substring(0,10).equals("Classifica"))
+                            interfaccia.writeClassifica(msg);
+                        else
+                            interfaccia.writeError(msg);
                     } catch (IOException ex) {
                         return;
                     }

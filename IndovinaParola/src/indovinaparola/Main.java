@@ -2,18 +2,27 @@ package indovinaparola;
 
 import GestioneParola.Controllo;
 import GestioneParola.Parola;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
+
     //variabili per il gioco
     static public Parola parola;
     static public Controllo controllo;
-    static List<String> classifica;
+    static List<String> nomi;
     static List<Integer> tentativi;
+    static String[] classifica;
+    String visualizzaClassifica = "Classifica per tentativi:\n";
     //variabili per la connessione
     static List<ClientHandler> clients;
     ServerSocket serverSocket;
@@ -21,12 +30,13 @@ public class Main {
     Socket socket;
 
     public Main() {
-        parola= new Parola();
-        controllo=new Controllo(parola);
+        parola = new Parola();
+        controllo = new Controllo(parola);
         clients = new ArrayList<>();
-        classifica = new ArrayList<>();
+        nomi = new ArrayList<>();
         tentativi = new ArrayList<>();
-        
+        classifica = new String[10];
+
         try {
             serverSocket = new ServerSocket(Constants.PORT);
         } catch (IOException ex) {
@@ -41,7 +51,7 @@ public class Main {
 
     private void watiConnection() {
         log("Server Running...");
-
+        log("Parola segreta: " + parola.getParola());
         while (true) {
             try {
                 socket = serverSocket.accept();
@@ -58,7 +68,7 @@ public class Main {
             addClient(handler);
             thread.start();
         }
-        
+
     }
 
     public static List<ClientHandler> getClients() {
@@ -69,30 +79,83 @@ public class Main {
         clients.add(client);
     }
 
-  private void log(String message) {
+    private void log(String message) {
         System.out.println(message);
     }
-    public void setClassifica(String name, int ntentativi){
-        classifica.add(name);
-        tentativi.add(ntentativi); 
+
+    public void setClassifica(String name, int ntentativi) {
+        nomi.add(name);
+        tentativi.add(ntentativi);
     }
-    public void makeClassifica(){
-        String tot="Claffica per tentativi:\n";
-        
-        for (int i = 0; i < classifica.size()-1 ; i++) {
-            if(tentativi.get(i)>tentativi.get(i+1)){
-                Integer temp = tentativi.get(i);
-                tentativi.set(i, tentativi.get(i+1));
-                tentativi.set(i+1, temp);
-                String temp2 = classifica.get(i);
-                classifica.set(i, classifica.get(i+1));
-                classifica.set(i+1, temp2);
+
+    public String makeClassifica() {
+        for (int j = 0; j < nomi.size() - 1; j++) {
+            for (int i = 0; i < nomi.size() - 1; i++) {
+                if (tentativi.get(i) > tentativi.get(i + 1)) {
+                    Integer temp = tentativi.get(i);
+                    tentativi.set(i, tentativi.get(i + 1));
+                    tentativi.set(i + 1, temp);
+                    String temp2 = nomi.get(i);
+                    nomi.set(i, nomi.get(i + 1));
+                    nomi.set(i + 1, temp2);
+                }
             }
         }
-        for (int i = 0; i < classifica.size() ; i++) {
-            tot+= classifica.get(i) + "/ tentativi: " + tentativi.get(i) + "\n";
+        int k = 10;
+        if (nomi.size() < 10) {
+            k = nomi.size();
         }
-        
-        log(tot);
+        for (int i = 0; i < k; i++) {
+            visualizzaClassifica += i + 1 + "." + nomi.get(i) + "/ tentativi: " + tentativi.get(i) + "\n";
+            classifica[i] = nomi.get(i) + "-" + tentativi.get(i);
+        }
+
+        log(visualizzaClassifica);
+        return visualizzaClassifica;
+    }
+    
+    public String getClassifica() {
+        return visualizzaClassifica;
+    }
+
+    public void read() {
+        File file = new File("src/" + "classifica" + ".txt");
+
+        try {
+            Scanner s = new Scanner(file);
+            while (s.hasNextLine()) {
+                String line = s.nextLine();
+                for (int i = 0; i < line.length(); i++) {
+                    if (line.charAt(i) == '-') {
+                        nomi.add(line.substring(2, i));
+                        tentativi.add(Integer.parseInt(line.substring(i + 1, line.length())));
+                    }
+                }
+            }
+            s.close();
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Parola.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        makeClassifica();
+        save(file);
+    }
+
+    private void save(File f) {
+        ArrayList<String> list = new ArrayList<>();
+        int contatore = 1;
+        try {
+            PrintWriter printwriter = new PrintWriter(f);
+            for (String i : classifica) {
+                if (i != null) {
+                    i = contatore + "." + i;
+                    contatore++;
+                    printwriter.println(i);
+                }
+            }
+            printwriter.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
