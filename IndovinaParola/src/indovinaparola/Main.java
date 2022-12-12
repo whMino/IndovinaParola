@@ -77,7 +77,7 @@ public class Main {
         tentativi.add(ntentativi); 
     }
     public void makeClassifica(){
-        String tot="Claffica per tentativi:";
+        String tot="Claffica per tentativi:\n";
         
         for (int i = 0; i < classifica.size()-1 ; i++) {
             if(tentativi.get(i)>tentativi.get(i+1)){
