@@ -17,7 +17,6 @@ public class ClientHandler implements Runnable {
     public int ntentaivi = 0;
     String name;
     boolean isLosggedIn;
-    boolean isEnd = false;
 
     private DataInputStream input;
     private DataOutputStream output;
@@ -44,7 +43,7 @@ public class ClientHandler implements Runnable {
         write(output, "Your name : " + name);
         write(output, "Word Length : " + Main.parola.getParola().length());
 
-        while (!isEnd) {
+        while (true) {
             received = read();
             if (received.equalsIgnoreCase(Constants.LOGOUT)) {
                 this.isLosggedIn = false;
@@ -55,14 +54,10 @@ public class ClientHandler implements Runnable {
 
             forwardToClient(received);
         }
-        //closeStreams();
-        while(true) {
-            forwardToClient("");
-        }
+        closeStreams();
     }
 
     private void forwardToClient(String received) {
-        if (!isEnd) {
             String message = received;
             if (message != "") {
                 ntentaivi++;
@@ -75,9 +70,8 @@ public class ClientHandler implements Runnable {
                 for (ClientHandler c : Main.getClients()) {
                     if (c != this) {
                         write(c.output, "Il giocatore: " + name + " ha vinto (" + Main.parola.getParola() + ")");
-                        //c.closeSocket();
-                        //c.closeStreams();
-                        c.setEnd();
+                        c.closeSocket();
+                        c.closeStreams();
                     }
                 }
                 log(name + " : " + message);
@@ -99,10 +93,6 @@ public class ClientHandler implements Runnable {
                     log(name + " : " + message);
                 }
             }
-        }else {
-            write(this.output,main.getClassifica());
-        }
-
     }
 
     public void setclassifica() {
@@ -150,9 +140,5 @@ public class ClientHandler implements Runnable {
 
     private void log(String msg) {
         System.out.println(msg);
-    }
-
-    public void setEnd() {
-        isEnd = true;
     }
 }
